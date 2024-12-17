@@ -7,12 +7,12 @@ const LiveChat = () => {
   const dispatch=useDispatch();
   const msgs=useSelector((store)=>store.chat.messages);
   const [inputMsg,typeMessages]=useState(null);
-  
+  const search=useSelector((store)=>store.search.IsOpenSearch);//to find if search=true ie show search results
   //api polling:-
   const getData=(()=>{
    dispatch(addMessage({
     name:generate(),
-    msg:generateString(10) +" 🚀"
+    msg:generateString(10) +" 👍"
    }))
   });
   useEffect(()=>{
@@ -24,7 +24,9 @@ const LiveChat = () => {
   return (
     <>
 
-    <div className='ml-2 h-[360px] p-2 border border-black w-full bg-slate-100 rounded-lg overflow-y-scroll'>
+<div
+        className={`w-auto bg-white shadow-lg z-10 flex flex-wrap p-4 transition-opacity duration-300 opacity-100`}
+      >
          
           <div className='flex flex-col-reverse'>
         {msgs.map((msg,index)=>(
@@ -35,17 +37,35 @@ const LiveChat = () => {
         </div>  
           
           </div>
-          <form className='p-2 ml-2 w-full border border-black rounded-sm' onSubmit={(e)=>{
-            e.preventDefault();
-          dispatch(addMessage({
-    name:"Deega",
-    msg:inputMsg,
-  }),
-  typeMessages("")
-  )}}>
-          <input type="text" className='px-2 w-80' value={inputMsg} placeholder='Enter The msg...' onChange={(e)=>{typeMessages(e.target.value)}}/>
-          <button className='px-2 mx-2 bg-green-100' >Send</button>
-          </form>
+          <form
+  className="p-2 ml-2 w-full border border-black rounded-sm flex items-center"
+  onSubmit={(e) => {
+    e.preventDefault();
+    if (!inputMsg.trim()) return; // Prevent sending empty messages
+    dispatch(
+      addMessage({
+        name: "Deega",
+        msg: inputMsg.trim(), // Trim any unnecessary spaces
+      })
+    );
+    typeMessages(""); // Clear the input after dispatch
+  }}
+>
+  <input
+    type="text"
+    className="px-2 w-3/4 border border-gray-300 rounded-sm"
+    value={inputMsg}
+    placeholder="Enter the message..."
+    onChange={(e) => typeMessages(e.target.value)}
+  />
+  <button
+    type="submit"
+    className="px-4 mx-2 bg-green-100 rounded-sm hover:bg-green-200 transition"
+  >
+    Send
+  </button>
+</form>
+
           </>
           
   )

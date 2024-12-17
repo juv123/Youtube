@@ -1,51 +1,38 @@
-import React from 'react'
+import React from 'react';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { motion } from "framer-motion";
+const VideoCard = ({ video }) => {
+  const isSidebarOpen = useSelector((store) => store.nav.IsOpenSidebar);
+  const { snippet, statistics } = video;
+  const { title, channelTitle, thumbnails } = snippet;
 
-const VideoCard = ({video,id}) => {
-  const menu=useSelector((store)=>store.nav.IsOpenSidebar);
-     const {snippet,statistics}=video;
-    const {title,channelTitle,description,thumbnails}=snippet;
-  if(!menu){ // hamburg menu is opened
-    return (
-      <div className='w-56 mx-1 my-36 px-10 py-10 h-80 mb-2 mt-4'>
-       <img src={thumbnails?.medium?.url} className="rounded-lg" alt="can't be loaded" />
-       <ul className='text-center'>
-         <li className='italic overflow-x-hidden overflow-y-hidden text-lg'>{title}</li>  
-          <li className='overflow-hidden'>{channelTitle}</li>
-         <li className='overflow-hidden'>{statistics?.viewCount} views</li>
-              
-       </ul>
-       </div>
-       
-     ) 
-  }
-     else{
-
-     return (
-   <div className='relative -top-96 w-56 mx-28 mr-0 px-8 h-52 mb-24 mt-0'>
-    <div className='rounded-sm hover:bg-zinc-500'>
-    <img src={thumbnails?.medium?.url} className="rounded-lg" alt="can't be loaded" />
-    </div>
-    
-    <ul className='text-center'>
-      <li className='overflow-x-hidden overflow-y-hidden'>{title}</li>  
-       <li className='overflow-hidden'>{channelTitle}</li>
-      <li className='overflow-hidden'>{statistics?.viewCount} views</li>
-           
-    </ul>
-    </div>
-    
-  )
-}
-};
-//higher order component:-
-export const HigherOrderComponent=({video,id}) =>{
   return (
-    <div className='font-bold bg-transparent shadow-lg text-neutral-600'>
-      <VideoCard  video={video} id={id}/>
-           
+    <div className={`p-4 rounded-lg h-72 md:h-64 w-screen ${isSidebarOpen ? 'md:w-1/2 lg:w-[80%]' : 'md:w-1/3 lg:w-1/4'} 
+   mx-auto `}>
+      <div className="rounded overflow-hidden h-52 w-72 shadow-sm bg-transparent">
+      <motion.img 
+  src={thumbnails?.medium?.url} 
+  alt="Thumbnail" 
+  className="w-72 h-32 object-cover"  whileHover={{ scale: 1.05, y: -5 }}
+  transition={{ type: "spring", stiffness: 300 }}
+/>
+        <div className="px-4 py-2">
+          <h2 className="font-bold text-lg truncate">{title}</h2>
+          <p className="text-sm text-gray-700 truncate">{channelTitle}</p>
+          <p className="text-sm text-gray-600">{statistics?.viewCount} views</p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Higher-order component
+export const HigherOrderComponent = ({ video }) => {
+  return (
+    <div>
+      <VideoCard video={video} />
     </div>
   );
 }
+
 export default VideoCard;

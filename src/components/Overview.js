@@ -4,11 +4,16 @@ import { OVERVIEW_API_URL } from '../utils/Constants';
 const Overview = ({videoId}) => {
     const [overview,updateOverview]=useState(null)
     const getOverview=async()=>{
+      try{
         const data=await fetch(OVERVIEW_API_URL+'&id='+videoId);
         const json=await data.json();
         updateOverview(json?.items[0]);
-         // console.log(json)     
-            }
+      }catch(error){
+        console.log(error);
+      }
+        
+       }        
+           
            
         useEffect(()=>{
         getOverview();

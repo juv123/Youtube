@@ -8,18 +8,27 @@ const VideoContainer = () => {
   const search=useSelector((store)=>store.search.IsOpenSearch);
        
    const getYoutubeVideos=(async()=>{ 
+    try {
         const data=await fetch(YOUTUBE_API_URL)
+        if (!data.ok) {
+          throw new Error('Network response was not ok');
+         }
+        
         const json=await data?.json();
         const response=json?.items;
         setVideoData(response);
-     
+         
+    
+      } catch (error) {
+    console.error('Fetch error: ', error);
+     }
    });
     useEffect(()=>{
      getYoutubeVideos();
     },[videoData])
     
   return (
-    <div className="flex flex-wrap bg-white pl-10 mt-1">
+    <div className="flex flex-wrap mx-12 p-6">
       {/*
 
         if search=false ie its for showing default popular videos.*/}
